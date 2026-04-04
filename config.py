@@ -1,0 +1,21 @@
+GRAPH_SIZES = [50, 100, 250, 500, 1000]
+
+GRAPH_DENSITIES = [0.1, 0.3, 0.6, 0.9]
+
+WEIGHT_MIN = 1
+WEIGHT_MAX = 100
+
+NEGATIVE_WEIGHT_MIN = -20
+NEGATIVE_WEIGHT_MAX = 100
+
+NUM_RUNS = 5
+
+SOURCE_NODE = 0
+
+STRUCTURES = ["adjacency_matrix", "edge_list", "adjacency_list"]
+
+RESULTS_DIR = "results"
+
+SAVE_CSV = True
+
+GENERATE_PLOTS = True
