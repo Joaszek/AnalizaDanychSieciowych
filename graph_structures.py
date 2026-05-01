@@ -3,16 +3,6 @@ import math
 
 
 class AdjacencyMatrix:
-    """
-    Reprezentacja grafu jako macierzy wag.
-
-    adjacency_matrix[i][j] = waga krawędzi i→j,
-    lub None gdy krawędź nie istnieje.
-
-    Złożoność pamięciowa: O(V²)
-    Sprawdzenie sąsiedztwa: O(1)
-    Iteracja po sąsiadach: O(V)
-    """
 
     def __init__(self, num_vertices: int):
         self._n = num_vertices
@@ -55,7 +45,11 @@ class AdjacencyMatrix:
         return self._edge_count
 
     def memory_bytes(self) -> int:
-        return self._n * self._n * 28
+        # Struktura list: lista zewnętrzna + n list wewnętrznych (nagłówek 56 B + n wskaźników po 8 B)
+        list_structure = (56 + self._n * 8) + self._n * (56 + self._n * 8)
+        # Obiekty float tylko dla istniejących krawędzi (None to singleton — brak dodatkowej alokacji)
+        float_objects = self._edge_count * 24
+        return list_structure + float_objects
 
     def __repr__(self):
         return f"AdjacencyMatrix(V={self._n}, E={self._edge_count})"
@@ -74,7 +68,7 @@ class EdgeList:
             self._edge_set.add((u, v))
 
     def get_neighbors(self, u: int):
-        """Zwraca listę (sąsiad, waga) – O(E)."""
+        """Zwraca listę (sąsiad, waga) O(E)."""
         return [(v, w) for (a, v, w) in self._edges if a == u]
 
     def get_all_edges(self):
@@ -92,7 +86,12 @@ class EdgeList:
         return len(self._edges)
 
     def memory_bytes(self) -> int:
-        return len(self._edges) * 120 + 56
+        e = len(self._edges)
+        # _edges: nagłówek listy (56 B) + wskaźniki (8 B/krawędź) + krotki 3-elementowe (72 B/krawędź)
+        edges_list = 56 + e * 8 + e * 72
+        # _edge_set: tablica hashująca (~1.3 slotów/element * 8 B) + krotki 2-elementowe (56 B/krawędź)
+        edge_set = int(e * 1.3 * 8) + e * 56
+        return edges_list + edge_set
 
     def __repr__(self):
         return f"EdgeList(V={self._n}, E={len(self._edges)})"
@@ -131,7 +130,14 @@ class AdjacencyList:
         return self._edge_count
 
     def memory_bytes(self) -> int:
-        return self._edge_count * 120 + self._n * 200
+        # Dict: nagłówek (56 B) + tablica hashująca (~1.3 slotów * 8 B/wierzchołek)
+        # Klucze int 0..n-1 są internowane w Pythonie — brak dodatkowej alokacji
+        dict_overhead = 56 + int(self._n * 1.3 * 8)
+        # Listy sąsiadów: nagłówek (56 B/wierzchołek) + wskaźniki (8 B/krawędź)
+        list_overheads = self._n * 56 + self._edge_count * 8
+        # Krotki 2-elementowe (v, w): 56 B/krawędź
+        tuples = self._edge_count * 56
+        return dict_overhead + list_overheads + tuples
 
     def __repr__(self):
         return f"AdjacencyList(V={self._n}, E={self._edge_count})"

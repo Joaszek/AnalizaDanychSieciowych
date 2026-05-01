@@ -137,7 +137,7 @@ def run_negative_cycle_experiment(verbose: bool = True) -> List[ExperimentResult
     from graph_structures import create_graph
 
     if verbose:
-        print("\n  [SPECJALNY] Test ujemnego cyklu dla Bellmana-Forda...")
+        print("Test ujemnego cyklu dla Bellmana-Forda...")
 
     results = []
     for structure in STRUCTURES:

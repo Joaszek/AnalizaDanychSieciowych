@@ -14,7 +14,7 @@ try:
     MATPLOTLIB_AVAILABLE = True
 except ImportError:
     MATPLOTLIB_AVAILABLE = False
-    print("  [UWAGA] matplotlib niedostępny – wykresy pominięte.")
+    print("  [UWAGA] matplotlib niedostępny  wykresy pominięte.")
 
 
 def save_csv(results: List[ExperimentResult], filename: str = "results.csv") -> str:
@@ -169,7 +169,7 @@ def plot_memory_vs_size(results: List[ExperimentResult], density: float = 0.3) -
 
     fig, ax = plt.subplots(figsize=(8, 5))
     ax.set_title(
-        f"Zużycie pamięci vs rozmiar grafu  (gęstość = {density:.1f})",
+        f"Zużycie pamięci vs rozmiar grafu (gęstość = {density:.1f})",
         fontsize=12, fontweight="bold"
     )
 
@@ -233,7 +233,7 @@ def plot_dijkstra_vs_bellmanford(results: List[ExperimentResult], density: float
 
     fig, ax = plt.subplots(figsize=(9, 5))
     ax.set_title(
-        f"Dijkstra vs Bellman-Ford – czas (lista sąsiedztwa, gęstość={density:.1f})",
+        f"Dijkstra vs Bellman-Ford czas (lista sąsiedztwa, gęstość={density:.1f})",
         fontsize=12, fontweight="bold"
     )
 
@@ -266,7 +266,7 @@ def generate_all_plots(results: List[ExperimentResult]) -> None:
         print("  Wykresy pominięte (brak matplotlib).")
         return
 
-    print("\n  Generowanie wykresów...")
+    print("Generowanie wykresów...")
     plot_time_vs_size(results, density=0.3)
     plot_time_vs_density(results, size=250)
     plot_memory_vs_size(results, density=0.3)
@@ -283,14 +283,36 @@ def _save_fig(filename: str) -> None:
     print(f"    Zapisano: {path}")
 
 
+def load_csv(filename: str = "results.csv") -> List[ExperimentResult]:
+    """Wczytuje wyniki z pliku CSV."""
+    filepath = os.path.join(RESULTS_DIR, filename)
+    results = []
+    with open(filepath, newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            results.append(ExperimentResult(
+                algorithm=row["algorithm"],
+                structure=row["structure"],
+                num_vertices=int(row["num_vertices"]),
+                density=float(row["density"]),
+                num_edges=int(row["num_edges"]),
+                avg_time_ms=float(row["avg_time_ms"]),
+                std_time_ms=float(row["std_time_ms"]),
+                memory_bytes=int(row["memory_bytes"]),
+                avg_operations=float(row["avg_operations"]),
+                negative_cycle=row["negative_cycle"].strip().lower() in ("true", "1", "yes"),
+            ))
+    return results
+
+
 def print_analysis(results: List[ExperimentResult]) -> None:
     """Drukuje automatyczną analizę tekstową wyników."""
-    print("\n" + "=" * 70)
+    print("=" * 70)
     print("  ANALIZA WYNIKÓW")
     print("=" * 70)
 
     for algo in ["Dijkstra", "Bellman-Ford"]:
-        print(f"\n  ── {algo} ──")
+        print(f"── {algo} ──")
         algo_results = _filter(results, algo=algo)
         if not algo_results:
             continue
@@ -302,9 +324,9 @@ def print_analysis(results: List[ExperimentResult]) -> None:
             worst = max(large_graph, key=lambda r: r.avg_time_ms)
             print(
                 f"  Dla V={max_v}, gęstość=0.3:"
-                f"\n    Najszybsza struktura : {best.structure} ({best.avg_time_ms:.2f} ms)"
-                f"\n    Najwolniejsza        : {worst.structure} ({worst.avg_time_ms:.2f} ms)"
-                f"\n    Współczynnik różnicy : {worst.avg_time_ms / max(best.avg_time_ms, 0.001):.1f}x"
+                f"Najszybsza struktura : {best.structure} ({best.avg_time_ms:.2f} ms)"
+                f"Najwolniejsza        : {worst.structure} ({worst.avg_time_ms:.2f} ms)"
+                f"Współczynnik różnicy : {worst.avg_time_ms / max(best.avg_time_ms, 0.001):.1f}x"
             )
 
         mem_results = _filter(algo_results, density=0.3, size=max_v)
@@ -314,3 +336,16 @@ def print_analysis(results: List[ExperimentResult]) -> None:
                 print(f"    {r.structure:<20}: {r.memory_bytes/1024:.1f} KB")
 
     print()
+
+
+if __name__ == "__main__":
+    csv_path = os.path.join(RESULTS_DIR, "results.csv")
+    print(f"Wczytywanie wyników z: {csv_path}")
+    results = load_csv("results.csv")
+    print(f"Załadowano {len(results)} rekordów.\n")
+
+    main_results = [r for r in results if "neg.cycle" not in r.algorithm]
+
+    print_summary_table(main_results)
+    print_analysis(main_results)
+    generate_all_plots(main_results)

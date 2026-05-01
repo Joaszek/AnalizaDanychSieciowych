@@ -1,19 +1,3 @@
-#!/usr/bin/env python3
-# ============================================================
-#  main.py – główny plik uruchamiający projekt
-# ============================================================
-"""
-Projekt Pr3: Dijkstra i Bellman-Ford – porównanie struktur danych
-
-Uruchomienie:
-    python main.py              # pełne eksperymenty
-    python main.py --quick      # szybki test (mniejsze grafy)
-    python main.py --demo       # demonstracja na małym grafie
-    python main.py --no-plots   # bez generowania wykresów
-
-Wyniki trafiają do katalogu ./results/
-"""
-
 import sys
 import os
 import argparse
@@ -29,9 +13,7 @@ from evaluation import (
 )
 
 def run_demo() -> None:
-    print("\n" + "=" * 60)
-    print("  DEMO – mały graf (6 wierzchołków)")
-    print("=" * 60)
+    print("  DEMO")
 
     edges = [
         (0, 1, 4), (0, 2, 2),
@@ -41,11 +23,11 @@ def run_demo() -> None:
         (4, 3, 2), (4, 5, 3),
     ]
 
-    print("\n  Krawędzie grafu (u → v, waga):")
+    print("Krawędzie grafu (u → v, waga):")
     for u, v, w in edges:
         print(f"    {u} → {v}  waga={w}")
 
-    print("\n  Wyniki dla każdej struktury danych:")
+    print("Wyniki dla każdej struktury danych:")
     print()
 
     for struct_name in ["adjacency_matrix", "edge_list", "adjacency_list"]:
@@ -67,7 +49,7 @@ def run_demo() -> None:
             dist_d_str = f"{dist_d:.0f}" if dist_d < 1e14 else "∞"
             dist_bf_str = f"{dist_bf:.0f}" if dist_bf < 1e14 else "∞"
             print(f"  {target:>4} | {dist_d_str:>10} | {dist_bf_str:>10} | {path_str}")
-        print(f"\n  Operacje – Dijkstra: {res_d['operations']}, Bellman-Ford: {res_bf['operations']}")
+        print(f"Operacje - Dijkstra: {res_d['operations']}, Bellman-Ford: {res_bf['operations']}")
         print()
 
 
@@ -82,7 +64,7 @@ def run_quick_test() -> list:
     cfg.GRAPH_DENSITIES = [0.2, 0.5]
     cfg.NUM_RUNS        = 3
 
-    print("\n  Tryb QUICK – mniejsze grafy i mniej powtórzeń.")
+    print("Tryb QUICK - mniejsze grafy i mniej powtórzeń.")
     results = run_all_experiments(verbose=True)
 
     cfg.GRAPH_SIZES     = original_sizes
@@ -94,7 +76,7 @@ def run_quick_test() -> list:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Pr3: Dijkstra vs Bellman-Ford – porównanie struktur danych"
+        description="Pr3: Dijkstra vs Bellman-Ford - porównanie struktur danych"
     )
     parser.add_argument("--quick",    action="store_true", help="Szybki test (mniejsze grafy)")
     parser.add_argument("--demo",     action="store_true", help="Tylko demonstracja na małym grafie")
@@ -102,7 +84,7 @@ def main() -> None:
     args = parser.parse_args()
 
     print("=" * 60)
-    print("  Pr3: Dijkstra & Bellman-Ford – Analiza struktur danych")
+    print("  Pr3: Dijkstra & Bellman-Ford - Analiza struktur danych")
     print("=" * 60)
     print(f"  Rozmiary grafów  : {GRAPH_SIZES}")
     print(f"  Gęstości         : {GRAPH_DENSITIES}")
@@ -112,7 +94,7 @@ def main() -> None:
         run_demo()
         return
 
-    print("\n[1/4] Uruchamiam eksperymenty...\n")
+    print("[1/4] Uruchamiam eksperymenty...")
     t0 = time.time()
 
     if args.quick:
@@ -120,15 +102,15 @@ def main() -> None:
     else:
         results = run_all_experiments(verbose=True)
 
-    print("\n[2/4] Test wykrywania ujemnego cyklu...")
+    print("[2/4] Test wykrywania ujemnego cyklu...")
     neg_results = run_negative_cycle_experiment(verbose=True)
     results.extend(neg_results)
 
     elapsed = time.time() - t0
-    print(f"\n  Łączny czas eksperymentów: {elapsed:.1f} s")
+    print(f"Łączny czas eksperymentów: {elapsed:.1f} s")
     print(f"  Liczba pomiarów: {len(results)}")
 
-    print("\n[3/4] Podsumowanie wyników:\n")
+    print("[3/4] Podsumowanie wyników:")
     main_results = [r for r in results if "neg.cycle" not in r.algorithm]
     print_summary_table(main_results)
 
@@ -139,12 +121,12 @@ def main() -> None:
         print(f"  Wyniki CSV zapisane: {path}")
 
     if GENERATE_PLOTS and not args.no_plots:
-        print("\n[4/4] Generowanie wykresów...")
+        print("[4/4] Generowanie wykresów...")
         generate_all_plots(main_results)
     else:
-        print("\n[4/4] Wykresy pominięte.")
+        print("[4/4] Wykresy pominięte.")
 
-    print("\n  Gotowe! Wyniki w katalogu:", os.path.abspath(RESULTS_DIR))
+    print("Gotowe! Wyniki w katalogu:", os.path.abspath(RESULTS_DIR))
     print("=" * 60)
 
 

@@ -1,0 +1,25 @@
+\babel@toc {polish}{}\relax 
+\contentsline {section}{\numberline {1}Cel i zakres zadania}{2}{section.1}%
+\contentsline {section}{\numberline {2}Opis algorytmów i szczegóły implementacji}{2}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Algorytm Dijkstry}{2}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Algorytm Bellmana-Forda}{3}{subsection.2.2}%
+\contentsline {section}{\numberline {3}Metodologia}{3}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Parametry eksperymentów}{3}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Pomiar pamięci}{3}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Test wykrywania ujemnych cykli}{3}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Środowisko testowe}{3}{subsection.3.4}%
+\contentsline {section}{\numberline {4}Wyniki eksperymentów}{4}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Czas wykonania a rozmiar grafu}{4}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Czas wykonania a gęstość grafu}{4}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Bezpośrednie porównanie obu algorytmów}{5}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Zużycie pamięci}{6}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Liczba operacji relaksacji}{6}{subsection.4.5}%
+\contentsline {section}{\numberline {5}Zestawienie wynikowe}{7}{section.5}%
+\contentsline {section}{\numberline {6}Analiza wyników}{8}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Wpływ struktury danych na czas wykonania}{8}{subsection.6.1}%
+\contentsline {paragraph}{Algorytm Dijkstry.}{8}{section*.11}%
+\contentsline {paragraph}{Algorytm Bellmana-Forda.}{8}{section*.12}%
+\contentsline {subsection}{\numberline {6.2}Wpływ rozmiaru i gęstości grafu}{8}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Zużycie pamięci}{9}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Wykrywanie ujemnych cykli}{9}{subsection.6.4}%
+\contentsline {section}{\numberline {7}Wnioski}{9}{section.7}%
